@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 @Document(collation = "Employee")
 public class Employee {
-    //CRIANDO PROPRIEDADE STATIC FINAL PARA SER A SEQUÊNCIA DE USUÁRIOS
+    //CRIANDO UMA PROPRIEDADE STATIC FINAL PARA SER A SEQUÊNCIA DE USUÁRIOS
     @Transient
     public static final String SEQUENCE_NAME = "users_sequence";
 
@@ -47,7 +47,7 @@ public class Employee {
 
     //endregion
 
-    //region Bloco - Getters and Setters
+    //region Bloco - Implementação dos Getters and Setters
 
     public long getId() {
         return id;
@@ -83,7 +83,7 @@ public class Employee {
 
     //endregion
 
-    //region Bloco - toString()
+    //region Bloco - Implementação do toString()
     @Override
     public String toString() {
         return "Employee{" +
