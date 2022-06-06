@@ -1,14 +1,15 @@
 package com.example.fullstackapp.controllers;
 
+import com.example.fullstackapp.exception.ResourceNotFoundException;
 import com.example.fullstackapp.model.Employee;
 import com.example.fullstackapp.repository.EmployeeRepository;
 import com.example.fullstackapp.service.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 //@CrossOrigin(origins = "http://localhost:4200")
@@ -25,11 +26,24 @@ public class EmployeeController {
     //endregion
 
     //region Bloco - Requisições HTTP
-    //criar método para trazer todos os registros encontrados no DB
-    @GetMapping
+    //CRIAR MÉTODO QUE TRAZ TODOS OS REGISTROS DE USUÁRIO REGISTRADOS NO DB
+    @GetMapping("/employees")
     public List<Employee> getAllEmployees(){
         return employeeRepository.findAll();
     }
-    //enregion
 
+    //MÉTODO PARA TRAZER UM ÚNICO REGISTRO SE ASSIM FOR SOLICITADO
+    @GetMapping("/employees/{id}")
+    public ResponseEntity<Employee> getEmployeeId(@PathVariable(value = "id") Long employeeId) throws ResourceNotFoundException){
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Colaborador não encontrado: " + employeeId));
+        return ResponseEntity.ok().body(employee);
+    }
+    //MÉTODO PARA CRIAR UM REGISTRO NO DB
+    @PostMapping("/employees")
+    public Employee createEmployee(@Valid @RequestBody Employee employee){
+        employee.setId(sequenceGeneratorService.generateSequence(Employee.SEQUENCE_NAME));
+        return employeeRepository.save(employee);
+    }
+    //endregion
 }
