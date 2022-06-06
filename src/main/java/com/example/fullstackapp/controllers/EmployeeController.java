@@ -34,7 +34,8 @@ public class EmployeeController {
 
     //MÉTODO PARA TRAZER UM ÚNICO REGISTRO SE ASSIM FOR SOLICITADO
     @GetMapping("/employees/{id}")
-    public ResponseEntity<Employee> getEmployeeId(@PathVariable(value = "id") Long employeeId) throws ResourceNotFoundException){
+    public ResponseEntity<Employee> getEmployeeId(@PathVariable(value = "id") Long employeeId)
+            throws ResourceNotFoundException{
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Colaborador não encontrado: " + employeeId));
         return ResponseEntity.ok().body(employee);
@@ -44,6 +45,21 @@ public class EmployeeController {
     public Employee createEmployee(@Valid @RequestBody Employee employee){
         employee.setId(sequenceGeneratorService.generateSequence(Employee.SEQUENCE_NAME));
         return employeeRepository.save(employee);
+    }
+    //MÉTODO PARA ATUALIZAR REGISTROS
+    @PutMapping("/employees/{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable(value = "id") Long employeeId,
+                                                   @Valid @RequestBody Employee employeeDetails) throws ResourceNotFoundException{
+            Employee employee = employeeRepository.findById(employeeId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Colaborador não encontrado: " + employeeId));
+
+            //MANIPULANDO VALORES A PARTIR DA CONSTRUÇÃO DO MODEL
+        employee.setEmailId(employeeDetails.getEmailId());
+        employee.setLastName(employeeDetails.getLastName());
+        employee.setFirstName(employeeDetails.getFirstName());
+        final Employee updateEmployee = employeeRepository.save(employee);
+
+        return ResponseEntity.ok(updateEmployee);
     }
     //endregion
 }
