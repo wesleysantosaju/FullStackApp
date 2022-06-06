@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //@CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -60,6 +62,19 @@ public class EmployeeController {
         final Employee updateEmployee = employeeRepository.save(employee);
 
         return ResponseEntity.ok(updateEmployee);
+    }
+    //MÉTODO PARA EXCLUSÃO DE REGISTROS
+    @DeleteMapping("/employees/{id}")
+    public Map<String, Boolean> deleteEmployee(@PathVariable(value = "id") Long employeeId)
+            throws ResourceNotFoundException{
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Colaborador com este id, não encontrado."
+                        + employeeId));
+        //CHAMANDO PROCESSO DE EXCLUSÃO
+        employeeRepository.delete(employee);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("excluindo", Boolean.TRUE);
+        return response;
     }
     //endregion
 }
