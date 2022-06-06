@@ -23,7 +23,7 @@ public class SequenceGeneratorService {
     }
     //endregion
 
-    //region Bloco - Método Contador para gerar uma sequência para inserção de dados
+    //region Bloco - Método contador para gerar uma sequência para inserção de dados
     public long generateSequence(String seqName){
         DatabaseSequence counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
                 new Update().inc("seq", 1), options().returnNew(true).upsert(true), DatabaseSequence.class);
