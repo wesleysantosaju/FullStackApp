@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Document(collation = "Employee")
+@Document(collection = "Employee")
 public class Employee {
     //CRIANDO UMA PROPRIEDADE STATIC FINAL PARA SER A SEQUÊNCIA DE USUÁRIOS
     @Transient
